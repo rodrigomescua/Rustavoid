@@ -1,5 +1,5 @@
 # Stage 1: Build (Estágio de Compilação)
-FROM rust:1.78-slim AS builder
+FROM rust:1.86-slim AS builder
 
 WORKDIR /usr/src/app
 
@@ -33,8 +33,7 @@ RUN mkdir -p /app/data
 
 # Copia o binário compilado no estágio anterior
 COPY --from=builder /usr/src/app/target/release/rustavoid /app/rustavoid
-
-# Copia a pasta de recursos estáticos (CSS) necessária em runtime
+COPY --from=builder /usr/src/app/migrations /app/migrations
 COPY --from=builder /usr/src/app/static /app/static
 
 # Define as variáveis de ambiente padrões do container

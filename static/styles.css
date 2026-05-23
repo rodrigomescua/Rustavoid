@@ -10,6 +10,8 @@
     --primary: 263deg 80% 65%;       /* Violeta neon */
     --primary-hover: 263deg 85% 72%;
     --primary-glow: 263deg 80% 65% / 30%;
+    --btn-bg: 260deg 100% 65%;        /* Much brighter violet for stronger contrast */
+    --btn-bg-hover: 260deg 100% 72%;
     
     --text-primary: 220deg 40% 95%;  /* Branco quase puro */
     --text-secondary: 220deg 15% 70%;/* Cinza azulado */
@@ -157,15 +159,14 @@ header p {
     min-height: 100px;
 }
 
-/* Botões */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    background: hsl(var(--primary));
+    background: hsl(var(--btn-bg));
     color: #fff;
-    border: none;
+    border: 2px solid hsl(var(--primary));
     border-radius: var(--radius-md);
     padding: 0.9rem 1.5rem;
     font-size: 1rem;
@@ -177,7 +178,8 @@ header p {
 }
 
 .btn:hover {
-    background: hsl(var(--primary-hover));
+    background: hsl(var(--btn-bg-hover));
+    border-color: hsl(var(--primary-hover));
     transform: translateY(-2px);
     box-shadow: 0 6px 18px var(--primary-glow);
 }
