@@ -4,23 +4,20 @@
 :root {
     /* Paleta de Cores HSL Premium */
     --bg-base: 224deg 25% 10%;       /* Azul profundo quase preto */
-    --bg-surface: 223deg 20% 30%;    /* lighter surface for clearer card contrast */
-
-
-    --bg-glass: 223deg 20% 12% / 85%;/* increased opacity for better contrast */
+    --bg-surface: 223deg 20% 14%;    /* Superfície de cards */
+    --bg-glass: 223deg 20% 12% / 60%;/* Vidro translúcido */
     
-    --primary: 263deg 80% 70%;       /* Violeta neon brighter */
-    --primary-hover: 263deg 85% 78%;
-    --primary-glow: 263deg 80% 70% / 30%;
-    --btn-bg: 260deg 100% 70%;        /* brighter violet for buttons */
-    --btn-bg-hover: 260deg 100% 77%;
+    --primary: 263deg 80% 65%;       /* Violeta neon */
+    --primary-hover: 263deg 85% 72%;
+    --primary-glow: 263deg 80% 65% / 30%;
+    --btn-bg: 260deg 100% 65%;        /* Much brighter violet for stronger contrast */
+    --btn-bg-hover: 260deg 100% 72%;
     
     --text-primary: 220deg 40% 95%;  /* Branco quase puro */
     --text-secondary: 220deg 15% 70%;/* Cinza azulado */
     
     --border-color: 223deg 15% 22%;  /* Borda sutil */
-
-    --border-glass: 223deg 15% 35% / 45%;/* stronger border for glass panels */
+    --border-glass: 223deg 15% 30% / 30%;
     
     /* Cores de Gravidade */
     --severity-low: 150deg 60% 45%;     /* Verde esmeralda suave */
@@ -32,9 +29,6 @@
     --radius-md: 10px;
     --radius-sm: 6px;
     --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-    /* New variable for form fields */
-    --bg-form: 0deg 0% 30%; /* light grey for better contrast */
 }
 
 /* Reset e Configurações Globais */
@@ -103,21 +97,19 @@ header p {
 
 /* Estilo Glassmorphism (Cards e Painéis) */
 .glass-panel {
-    background: hsl(var(--bg-surface)); /* slightly lighter surface for better distinction */
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    background: hsl(var(--bg-glass));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: var(--radius-lg);
     padding: 2rem;
-
-    box-shadow: 0 8px 24px 0 rgba(0,0,0,0.45);/* stronger panel shadow */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     transition: var(--transition-smooth);
 }
 
 .glass-panel:hover {
     border-color: hsla(var(--primary), 0.25);
-    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.55), 0 0 15px hsla(var(--primary), 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 15px hsla(var(--primary), 0.05);
 }
 
 .panel-title {
@@ -125,21 +117,9 @@ header p {
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #fff;
-    /* Subtle bottom border for titles */
-    border-bottom: 2px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    padding-bottom: 0.3rem;
-}
-
-/* Apply same subtle border style to other titles */
-.avoid-title-group h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #fff;
-    border-bottom: 2px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.5rem;
+    border-left: 4px solid hsl(var(--primary));
+    padding-left: 0.75rem;
+    line-height: 1.2;
 }
 
 /* Formulário de Cadastro Moderno */
@@ -157,15 +137,14 @@ header p {
 
 .form-input, .form-select, .form-textarea {
     width: 100%;
-    background: hsl(var(--bg-form)); /* lighter grey for higher contrast */
-    border: 2px solid var(--border-color);
+    background: hsla(var(--bg-surface), 0.6);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.8rem 1rem;
     color: #fff;
     font-family: var(--font-sans);
     font-size: 0.95rem;
     transition: var(--transition-smooth);
-    box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
@@ -187,17 +166,15 @@ header p {
     width: 100%;
     background: hsl(var(--btn-bg));
     color: #fff;
-
-    border: 1px solid #c5a500 !important; /* muted gold border for balanced contrast */
+    border: 2px solid hsl(var(--primary));
     border-radius: var(--radius-md);
     padding: 0.9rem 1.5rem;
-
-    box-shadow: 0 0 2px #c5a500, 0 2px 4px var(--primary-glow);/* softer, balanced glow */
     font-size: 1rem;
     font-weight: 600;
     font-family: var(--font-sans);
     cursor: pointer;
     transition: var(--transition-smooth);
+    box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 .btn:hover {
@@ -233,28 +210,14 @@ header p {
 
 /* Card do Item */
 .avoid-card {
-    background: hsl(var(--bg-surface)); /* solid light surface for contrast */
-    border: 2px solid rgba(255,255,255,0.6); /* prominent white border */
+    background: hsla(var(--bg-surface), 0.5);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1rem;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45); /* subtle depth */
-    transition: var(--transition-smooth);
-    position: relative;
-    overflow: hidden;
-}
-    background: hsl(var(--bg-surface)); /* solid surface for clear contrast */
-    border: 1px solid rgba(255,255,255,0.4); /* visible white border */
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 1rem;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45); /* stronger shadow */
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
@@ -267,14 +230,14 @@ header p {
     left: 0;
     width: 4px;
     height: 100%;
-    background: var(--accent-color, hsl(var(--primary)));/* stronger accent */
+    background: var(--accent-color, hsl(var(--text-secondary)));
 }
 
 .avoid-card:hover {
     transform: translateX(4px);
-    background: hsla(var(--bg-surface), 0.9); /* slightly lighter on hover */
-    border-color: rgba(255,255,255,0.6);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+    background: hsla(var(--bg-surface), 0.8);
+    border-color: hsla(var(--text-secondary), 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .avoid-header {
@@ -295,7 +258,7 @@ header p {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: hsl(var(--text-primary));
+    color: hsl(var(--text-secondary));
     font-weight: 500;
 }
 
@@ -315,7 +278,7 @@ header p {
 /* Conteúdo do Card */
 .avoid-body {
     font-size: 0.95rem;
-    color: hsl(var(--text-primary));/* ensure readable text */
+    color: hsl(var(--text-secondary));
     line-height: 1.5;
 }
 
@@ -347,34 +310,23 @@ header p {
 }
 
 /* Botão de Deletar Sutil */
-/* Updated dark theme variables */
-:root {
-    /* Darker background palette */
-    --bg-base: 224deg 25% 5%;       /* Very dark base */
-    --bg-surface: 223deg 20% 20%;   /* Darker surface for cards */
-    /* Keep other variables unchanged */
-}
-
-/* Updated delete button for higher contrast */
 .btn-delete {
-    background: hsl(var(--severity-high)); /* solid red background for strong contrast */
-    border: 2px solid #fff; /* white border for visibility */
-    color: #fff; /* white text */
+    background: transparent;
+    border: none;
+    color: hsla(var(--severity-high), 0.6);
     cursor: pointer;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem;
     border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition-smooth);
-    box-shadow: 0 0 4px hsla(var(--severity-high), 0.5);
 }
 
 .btn-delete:hover {
-    background: hsl(var(--severity-high));
-    opacity: 0.9;
-    transform: scale(1.05);
-    box-shadow: 0 0 6px hsla(var(--severity-high), 0.7);
+    background: hsla(var(--severity-high), 0.15);
+    color: hsl(var(--severity-high));
+    transform: scale(1.1);
 }
 
 /* Efeitos e Animações HTMX */
