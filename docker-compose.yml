@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  rustavoid:
+    container_name: rustavoid
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mantém o banco SQLite persistido em uma pasta local 'data' no host
+      - ./data:/app/data
+    environment:
+      - PORT=8080
+      - RUST_LOG=rustavoid=info,tower_http=info
+      - DATABASE_URL=sqlite:///app/data/rustavoid.db?mode=rwc

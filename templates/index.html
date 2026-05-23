@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-grid">
+    <!-- Formulário de Cadastro (Painel Esquerdo) -->
+    <div class="glass-panel">
+        <h2 class="panel-title">Cadastrar Item</h2>
+        
+        <form hx-post="/items" 
+              hx-target="#avoid-list" 
+              hx-swap="afterbegin"
+              hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('empty-state-container')?.remove(); }">
+            
+            <div class="form-group">
+                <label for="title">Nome do Item / Marca / Serviço</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="Ex: Marca X de Geladeira" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Categoria</label>
+                <select id="category" name="category" class="form-select" required>
+                    <option value="Eletrodoméstico">Eletrodoméstico</option>
+                    <option value="Eletrônico">Eletrônico</option>
+                    <option value="Serviço / Assinatura">Serviço / Assinatura</option>
+                    <option value="Estabelecimento / Restaurante">Restaurante / Estabelecimento</option>
+                    <option value="Software / App">Software / App</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="severity">Gravidade da Decepção</label>
+                <select id="severity" name="severity" class="form-select" required>
+                    <option value="low">Baixa (Evite se puder)</option>
+                    <option value="medium" selected>Média (Relação ruim, compre outra coisa)</option>
+                    <option value="high">Alta (Péssimo! Nunca mais compre)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Por que evitar?</label>
+                <textarea id="reason" name="reason" class="form-textarea" placeholder="Descreva sua experiência ruim com detalhes..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="alternative">Alternativa Recomendada (Opcional)</label>
+                <input type="text" id="alternative" name="alternative" class="form-input" placeholder="Ex: Comprar da Marca Y">
+            </div>
+            
+            <button type="submit" class="btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Cadastrar
+            </button>
+        </form>
+    </div>
+
+    <!-- Lista de Itens a Evitar (Painel Direito) -->
+    <div class="glass-panel">
+        <h2 class="panel-title">Lista de Evitados</h2>
+        
+        <div id="avoid-list" class="list-container">
+            {% if items.is_empty() %}
+                <div id="empty-state-container" class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Parabéns! Nenhum item cadastrado ainda. Sua lista está limpa.</p>
+                    <p style="font-size: 0.85rem; margin-top: 0.5rem;">Cadastre marcas ou serviços decepcionantes para lembrar de evitá-los no futuro.</p>
+                </div>
+            {% else %}
+                {% for item in items %}
+                    {% include "item_card.html" %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rustavoid — Evite Frustrações{% endblock %}</title>
+    
+    <!-- CSS e Fontes -->
+    <link rel="stylesheet" href="/static/styles.css">
+    
+    <!-- HTMX para interatividade assíncrona instantânea -->
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVntoL15YYTLmyje0656JD1Ed24FLGYJiUnnCwJLyGEcCdIIyGp5gJ" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rustavoid 🚫</h1>
+            <p>Seu escudo pessoal contra experiências ruins. Cadastre marcas, produtos e serviços que não gostou para nunca mais repetir o erro.</p>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

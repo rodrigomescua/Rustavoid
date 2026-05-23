@@ -1,0 +1,17 @@
+# Rust
+/target
+Cargo.lock
+
+# SQLite local databases
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Docker & local data volumes
+/data/
+.env
+
+# Windows temp files
+Thumbs.db
+Desktop.ini
