@@ -2,39 +2,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Paleta de Cores HSL Premium */
-    --bg-base: 224deg 25% 10%;       /* Azul profundo quase preto */
-    --bg-surface: 223deg 20% 30%;    /* lighter surface for clearer card contrast */
+    /* Paleta de Cores HSL Premium - Contraste Equilibrado */
+    --bg-base: 224deg 25% 5%;       /* Fundo preto profundo */
+    --bg-surface: 223deg 20% 20%;   /* Painéis cinza escuro */
+    --bg-form: 223deg 15% 40%;      /* CAMPOS CINZA MÉDIO (Diferente do fundo) */
+    --bg-form-focus: 223deg 15% 45%; /* Ligeiramente mais claro para foco */
+    --text-on-form: 0deg 0% 100%;   /* Branco puro para legibilidade máxima */
 
-
-    --bg-glass: 223deg 20% 12% / 85%;/* increased opacity for better contrast */
-    
-    --primary: 263deg 80% 70%;       /* Violeta neon brighter */
+    --primary: 263deg 80% 70%;
     --primary-hover: 263deg 85% 78%;
-    --primary-glow: 263deg 80% 70% / 30%;
-    --btn-bg: 260deg 100% 70%;        /* brighter violet for buttons */
+    --primary-glow: 263deg 80% 70% / 25%;
+    
+    --btn-bg: 260deg 100% 70%;
     --btn-bg-hover: 260deg 100% 77%;
     
-    --text-primary: 220deg 40% 95%;  /* Branco quase puro */
-    --text-secondary: 220deg 15% 70%;/* Cinza azulado */
+    --text-primary: 220deg 40% 98%;
+    --text-secondary: 220deg 10% 75%;
     
-    --border-color: 223deg 15% 22%;  /* Borda sutil */
-
-    --border-glass: 223deg 15% 35% / 45%;/* stronger border for glass panels */
+    --border-color: 223deg 15% 45%;
+    --border-glass: 223deg 15% 45% / 50%;
     
     /* Cores de Gravidade */
-    --severity-low: 150deg 60% 45%;     /* Verde esmeralda suave */
-    --severity-medium: 38deg 90% 55%;   /* Laranja dourado */
-    --severity-high: 343deg 85% 55%;    /* Crimson violetado */
+    --severity-low: 150deg 60% 45%;
+    --severity-medium: 38deg 90% 55%;
+    --severity-high: 343deg 85% 55%;
     
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --radius-lg: 16px;
     --radius-md: 10px;
     --radius-sm: 6px;
     --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-    /* New variable for form fields */
-    --bg-form: 0deg 0% 30%; /* light grey for better contrast */
 }
 
 /* Reset e Configurações Globais */
@@ -51,8 +48,9 @@ body {
     min-height: 100vh;
     line-height: 1.6;
     background-image: 
-        radial-gradient(circle at 10% 20%, hsla(var(--primary), 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, hsla(var(--severity-high), 0.05) 0%, transparent 45%);
+        radial-gradient(at 0% 0%, hsla(var(--primary), 0.15) 0%, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(var(--severity-high), 0.1) 0%, transparent 50%),
+        radial-gradient(at 50% 100%, hsla(263deg, 80%, 50%, 0.1) 0%, transparent 50%);
     background-attachment: fixed;
     padding: 2rem 1rem;
 }
@@ -62,7 +60,6 @@ body {
     margin: 0 auto;
 }
 
-/* Cabeçalho Premium */
 header {
     text-align: center;
     margin-bottom: 3rem;
@@ -87,7 +84,6 @@ header p {
     margin: 0 auto;
 }
 
-/* Grid Layout Principal */
 .main-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -101,17 +97,14 @@ header p {
     }
 }
 
-/* Estilo Glassmorphism (Cards e Painéis) */
 .glass-panel {
-    background: hsl(var(--bg-surface)); /* slightly lighter surface for better distinction */
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    background: hsla(var(--bg-surface), 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: var(--radius-lg);
     padding: 2rem;
-
-    box-shadow: 0 8px 24px 0 rgba(0,0,0,0.45);/* stronger panel shadow */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     transition: var(--transition-smooth);
 }
 
@@ -125,24 +118,11 @@ header p {
     font-weight: 600;
     margin-bottom: 1.5rem;
     color: #fff;
-    /* Subtle bottom border for titles */
     border-bottom: 2px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding-bottom: 0.3rem;
 }
 
-/* Apply same subtle border style to other titles */
-.avoid-title-group h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #fff;
-    border-bottom: 2px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Formulário de Cadastro Moderno */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -155,24 +135,58 @@ header p {
     color: hsl(var(--text-secondary));
 }
 
-.form-input, .form-select, .form-textarea {
+.form-input, .form-textarea {
     width: 100%;
-    background: hsl(var(--bg-form)); /* lighter grey for higher contrast */
-    border: 2px solid var(--border-color);
+    background: hsl(var(--bg-form));
+    backdrop-filter: none;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 0.8rem 1rem;
-    color: #fff;
+    color: hsl(var(--text-on-form));
     font-family: var(--font-sans);
     font-size: 0.95rem;
+    font-weight: 500;
     transition: var(--transition-smooth);
-    box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-select {
+    width: 100%;
+    background: hsl(var(--bg-form)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    backdrop-filter: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    color: hsl(var(--text-on-form));
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    appearance: none;
+}
+
+/* Estilizando as opções do select */
+.form-select option {
+    background: hsl(var(--bg-surface));
+    color: hsl(var(--text-primary));
+    padding: 0.5rem 1rem;
+}
+
+.form-select option:hover {
+    background: hsl(var(--bg-surface));
+    color: #fff;
+}
+
+.form-input:focus, 
+.form-select:focus, 
+.form-textarea:focus {
     outline: none;
     border-color: hsl(var(--primary));
-    background: hsl(var(--bg-surface));
-    box-shadow: 0 0 0 4px var(--primary-glow);
+    background: hsl(var(--bg-form-focus));
+    box-shadow: 0 0 0 4px var(--primary-glow), inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .form-textarea {
@@ -185,14 +199,12 @@ header p {
     align-items: center;
     justify-content: center;
     width: 100%;
-    background: hsl(var(--btn-bg));
+    background: linear-gradient(135deg, hsl(var(--btn-bg)), hsl(var(--primary)));
     color: #fff;
-
-    border: 1px solid #c5a500 !important; /* muted gold border for balanced contrast */
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: var(--radius-md);
     padding: 0.9rem 1.5rem;
-
-    box-shadow: 0 0 2px #c5a500, 0 2px 4px var(--primary-glow);/* softer, balanced glow */
+    box-shadow: 0 4px 12px var(--primary-glow);
     font-size: 1rem;
     font-weight: 600;
     font-family: var(--font-sans);
@@ -201,17 +213,12 @@ header p {
 }
 
 .btn:hover {
-    background: hsl(var(--btn-bg-hover));
-    border-color: hsl(var(--primary-hover));
+    background: linear-gradient(135deg, hsl(var(--btn-bg-hover)), hsl(var(--primary-hover)));
+    border-color: rgba(255,255,255,0.2);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px var(--primary-glow);
+    box-shadow: 0 8px 20px var(--primary-glow);
 }
 
-.btn:active {
-    transform: translateY(0);
-}
-
-/* Lista de Evitados (Cards Dinâmicos) */
 .list-container {
     display: flex;
     flex-direction: column;
@@ -222,39 +229,33 @@ header p {
     text-align: center;
     padding: 4rem 2rem;
     color: hsl(var(--text-secondary));
+    background: hsla(var(--bg-surface), 0.5);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--border-glass);
 }
 
 .empty-state svg {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 1rem;
-    stroke: hsla(var(--text-secondary), 0.4);
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1.5rem;
+    stroke: hsl(var(--primary));
+    background: hsla(var(--primary), 0.1);
+    padding: 1rem;
+    border-radius: 50%;
 }
 
-/* Card do Item */
 .avoid-card {
-    background: hsl(var(--bg-surface)); /* solid light surface for contrast */
-    border: 2px solid rgba(255,255,255,0.6); /* prominent white border */
+    background: hsla(var(--bg-surface), 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-glass);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 1rem;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45); /* subtle depth */
-    transition: var(--transition-smooth);
-    position: relative;
-    overflow: hidden;
-}
-    background: hsl(var(--bg-surface)); /* solid surface for clear contrast */
-    border: 1px solid rgba(255,255,255,0.4); /* visible white border */
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 1rem;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.45); /* stronger shadow */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
@@ -267,14 +268,14 @@ header p {
     left: 0;
     width: 4px;
     height: 100%;
-    background: var(--accent-color, hsl(var(--primary)));/* stronger accent */
+    background: var(--accent-color, hsl(var(--primary)));
 }
 
 .avoid-card:hover {
     transform: translateX(4px);
-    background: hsla(var(--bg-surface), 0.9); /* slightly lighter on hover */
-    border-color: rgba(255,255,255,0.6);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+    background: hsla(var(--bg-surface), 0.9);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.55), 0 0 15px var(--accent-color);
 }
 
 .avoid-header {
@@ -299,7 +300,6 @@ header p {
     font-weight: 500;
 }
 
-/* Pills de Gravidade */
 .severity-badge {
     padding: 0.3rem 0.75rem;
     border-radius: 50px;
@@ -312,10 +312,9 @@ header p {
     border: 1px solid hsla(var(--badge-color), 0.3);
 }
 
-/* Conteúdo do Card */
 .avoid-body {
     font-size: 0.95rem;
-    color: hsl(var(--text-primary));/* ensure readable text */
+    color: hsl(var(--text-primary));
     line-height: 1.5;
 }
 
@@ -346,20 +345,10 @@ header p {
     color: hsla(var(--text-secondary), 0.6);
 }
 
-/* Botão de Deletar Sutil */
-/* Updated dark theme variables */
-:root {
-    /* Darker background palette */
-    --bg-base: 224deg 25% 5%;       /* Very dark base */
-    --bg-surface: 223deg 20% 20%;   /* Darker surface for cards */
-    /* Keep other variables unchanged */
-}
-
-/* Updated delete button for higher contrast */
 .btn-delete {
-    background: hsl(var(--severity-high)); /* solid red background for strong contrast */
-    border: 2px solid #fff; /* white border for visibility */
-    color: #fff; /* white text */
+    background: hsl(var(--severity-high));
+    border: 2px solid #fff;
+    color: #fff;
     cursor: pointer;
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);
@@ -377,7 +366,6 @@ header p {
     box-shadow: 0 0 6px hsla(var(--severity-high), 0.7);
 }
 
-/* Efeitos e Animações HTMX */
 .htmx-swapping {
     opacity: 0;
     transform: scale(0.9) translateX(-20px);

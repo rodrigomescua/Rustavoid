@@ -21,16 +21,16 @@ pub struct CreateItemInput {
     pub severity: String,
 }
 
-/// Busca todos os itens cadastrados no banco de dados, ordenados pelos mais recentes.
+/// Retorna todos os itens cadastrados.
 pub async fn get_all_items(pool: &SqlitePool) -> Result<Vec<AvoidItem>, sqlx::Error> {
     sqlx::query_as::<_, AvoidItem>(
-        "SELECT id, title, category, reason, alternative, severity, strftime('%Y-%m-%d %H:%M:%S', created_at) as created_at 
-         FROM avoid_items 
-         ORDER BY id DESC"
+        "SELECT id, title, category, reason, alternative, severity, strftime('%Y-%m-%d %H:%M:%S', created_at) as created_at FROM avoid_items ORDER BY created_at DESC"
     )
     .fetch_all(pool)
     .await
 }
+
+
 
 /// Cria um novo item no banco de dados SQLite e retorna o item recém-criado.
 pub async fn create_item(
@@ -60,6 +60,34 @@ pub async fn create_item(
     .bind(id)
     .fetch_one(pool)
     .await
+}
+
+/// Retorna a lista de categorias distintas cadastradas.
+pub async fn get_all_categories(pool: &SqlitePool) -> Result<Vec<String>, sqlx::Error> {
+    sqlx::query_scalar::<_, String>(
+        "SELECT DISTINCT category FROM avoid_items ORDER BY category"
+    )
+    .fetch_all(pool)
+    .await
+}
+
+/// Deleta todos os itens de uma determinada categoria.
+pub async fn delete_items_by_category(pool: &SqlitePool, category: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM avoid_items WHERE category = ?")
+        .bind(category)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Atualiza a categoria de todos os items que possuem a categoria antiga para a nova.
+pub async fn rename_category(pool: &SqlitePool, old: &str, new: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE avoid_items SET category = ? WHERE category = ?")
+        .bind(new)
+        .bind(old)
+        .execute(pool)
+        .await?;
+    Ok(())
 }
 
 /// Deleta um item do banco de dados pelo seu ID.

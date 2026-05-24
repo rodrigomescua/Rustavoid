@@ -3,8 +3,8 @@ use axum::{
     extract::{Path, State, Form},
     http::StatusCode,
     response::IntoResponse,
-    routing::{delete, get},
-    Router,
+    routing::{delete, get, post, put},
+    Json, Router,
 };
 use sqlx::SqlitePool;
 use std::net::SocketAddr;
@@ -58,6 +58,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 4. Configura as rotas do Axum
     let app = Router::new()
+        .route("/categories", get(categories_handler))
+        .route("/categories-manage", get(categories_manage_ui_handler))
+        .route("/categories", post(create_category_handler))
+        .route("/categories/:name", delete(delete_category_handler))
+        .route("/categories/:name", put(rename_category_handler))
         // Rota principal: exibe a lista completa e o formulário
         .route("/", get(index_handler))
         // Rotas de manipulação (integração do HTMX)
@@ -112,6 +117,81 @@ async fn create_item_handler(
     }
 }
 
+
+/// Handler que devolve a lista de categorias como JSON
+async fn categories_handler(State(pool): State<SqlitePool>) -> impl IntoResponse {
+    match db::get_all_categories(&pool).await {
+        Ok(categories) => (StatusCode::OK, Json(categories)).into_response(),
+        Err(err) => {
+            error!("Erro ao buscar categorias: {:?}", err);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao carregar categorias.").into_response()
+        }
+    }
+}
+
+/// Handler para criar uma nova categoria (recebe JSON { "category": "Nome" })
+async fn create_category_handler(
+    State(pool): State<SqlitePool>,
+    Json(payload): Json<CreateCategoryPayload>,
+) -> impl IntoResponse {
+    let category = payload.category.trim();
+    if category.is_empty() {
+        return (StatusCode::BAD_REQUEST, "Categoria vazia").into_response();
+    }
+    // Verifica se já existe
+    let exists: Option<String> = sqlx::query_scalar::<_, String>(
+        "SELECT category FROM avoid_items WHERE category = ? LIMIT 1"
+    )
+    .bind(category)
+    .fetch_optional(&pool)
+    .await
+    .unwrap_or(None);
+    
+    if exists.is_some() {
+        return (StatusCode::CONFLICT, "Categoria já existe").into_response();
+    }
+    (StatusCode::CREATED, Json(Vec::<String>::new())).into_response()
+}
+
+#[derive(serde::Deserialize)]
+struct CreateCategoryPayload {
+    category: String,
+}
+
+/// Handler para excluir uma categoria (deleta todos os itens associados)
+async fn delete_category_handler(
+    State(pool): State<SqlitePool>,
+    Path(name): Path<String>,
+) -> impl IntoResponse {
+    match db::delete_items_by_category(&pool, &name).await {
+        Ok(_) => StatusCode::OK.into_response(),
+        Err(err) => {
+            error!("Erro ao excluir categoria: {:?}", err);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao excluir categoria").into_response()
+        }
+    }
+}
+
+/// Handler para renomear uma categoria (JSON { "new_name": "..." })
+async fn rename_category_handler(
+    State(pool): State<SqlitePool>,
+    Path(old_name): Path<String>,
+    Json(payload): Json<RenameCategoryPayload>,
+) -> impl IntoResponse {
+    match db::rename_category(&pool, &old_name, &payload.new_name).await {
+        Ok(_) => StatusCode::OK.into_response(),
+        Err(err) => {
+            error!("Erro ao renomear categoria: {:?}", err);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao renomear categoria").into_response()
+        }
+    }
+}
+
+#[derive(serde::Deserialize)]
+struct RenameCategoryPayload {
+    new_name: String,
+}
+
 /// Handler de exclusão (DELETE /items/:id): Exclui o item e retorna 200 OK vazio.
 /// O HTMX remove a linha (card) do DOM por receber uma resposta de sucesso vazia.
 async fn delete_item_handler(
@@ -129,3 +209,23 @@ async fn delete_item_handler(
         }
     }
 }
+
+#[derive(Template)]
+#[template(path = "categories_manage.html")]
+struct CategoriesManageTemplate {
+    categories: Vec<String>,
+}
+
+async fn categories_manage_ui_handler(State(pool): State<SqlitePool>) -> impl IntoResponse {
+    match db::get_all_categories(&pool).await {
+        Ok(categories) => {
+            info!("Categorias carregadas: {:?}", categories);
+            CategoriesManageTemplate { categories }.into_response()
+        },
+        Err(err) => {
+            error!("Erro ao carregar painel de categorias: {:?}", err);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao carregar painel").into_response()
+        }
+    }
+}
+
