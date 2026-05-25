@@ -100,6 +100,10 @@ label {
     font: inherit;
 }
 
+.search-field {
+    margin-bottom: 0.85rem;
+}
+
 textarea.field {
     min-height: 92px;
     resize: vertical;

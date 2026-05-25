@@ -1,6 +1,6 @@
 use askama::Template;
 use axum::{
-    extract::{Form, Path, State},
+    extract::{Form, Path, Query, State},
     http::HeaderMap,
     http::StatusCode,
     response::{IntoResponse, Redirect},
@@ -28,6 +28,17 @@ struct ItemCardTemplate {
     item: db::AvoidItem,
 }
 
+#[derive(Template)]
+#[template(path = "items_list.html")]
+struct ItemsListTemplate {
+    items: Vec<db::AvoidItem>,
+}
+
+#[derive(serde::Deserialize)]
+struct SearchParams {
+    q: Option<String>,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::registry()
@@ -53,6 +64,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(index_handler))
+        .route("/items/search", get(search_items_handler))
         .route("/items", post(create_item_handler))
         .route("/items/:id", delete(delete_item_handler))
         .nest_service("/static", ServeDir::new("static"))
@@ -70,6 +82,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     axum::serve(listener, app).await?;
 
     Ok(())
+}
+
+async fn search_items_handler(
+    State(pool): State<SqlitePool>,
+    Query(params): Query<SearchParams>,
+) -> impl IntoResponse {
+    let query = params.q.unwrap_or_default();
+    match db::search_items_by_title(&pool, &query).await {
+        Ok(items) => ItemsListTemplate { items }.into_response(),
+        Err(err) => {
+            error!("Erro ao buscar itens por nome: {:?}", err);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao buscar itens.").into_response()
+        }
+    }
 }
 
 async fn index_handler(State(pool): State<SqlitePool>) -> impl IntoResponse {

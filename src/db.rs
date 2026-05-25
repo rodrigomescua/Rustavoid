@@ -149,3 +149,28 @@ pub async fn list_categories(pool: &SqlitePool) -> Result<Vec<String>, sqlx::Err
     .fetch_all(pool)
     .await
 }
+
+pub async fn search_items_by_title(pool: &SqlitePool, query: &str) -> Result<Vec<AvoidItem>, sqlx::Error> {
+    let trimmed = query.trim();
+    if trimmed.is_empty() {
+        return list_items(pool).await;
+    }
+
+    let pattern = format!("%{}%", trimmed.to_lowercase());
+    sqlx::query_as::<_, AvoidItem>(
+        "SELECT
+            id,
+            title,
+            category,
+            NULLIF(reason, '') AS reason,
+            alternative,
+            severity,
+            strftime('%Y-%m-%d %H:%M', created_at) AS created_at
+         FROM avoid_items
+         WHERE LOWER(title) LIKE ?
+         ORDER BY id DESC",
+    )
+    .bind(pattern)
+    .fetch_all(pool)
+    .await
+}

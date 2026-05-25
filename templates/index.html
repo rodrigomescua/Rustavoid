@@ -41,17 +41,17 @@
 
     <section class="panel">
         <h2>Itens a evitar</h2>
+        <input
+            type="search"
+            name="q"
+            class="field search-field"
+            placeholder="Buscar por nome..."
+            hx-get="/items/search"
+            hx-trigger="keyup changed delay:250ms, search"
+            hx-target="#avoid-list"
+            hx-swap="innerHTML">
         <div id="avoid-list" class="list-container">
-            {% if items.is_empty() %}
-                <div id="empty-state-container" class="empty-state">
-                    <p>Nenhum item cadastrado ainda.</p>
-                    <p>Adicione o primeiro para começar seu histórico.</p>
-                </div>
-            {% else %}
-                {% for item in items %}
-                    {% include "item_card.html" %}
-                {% endfor %}
-            {% endif %}
+            {% include "items_list.html" %}
         </div>
     </section>
 </div>

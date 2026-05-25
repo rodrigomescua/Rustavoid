@@ -1,0 +1,9 @@
+{% if items.is_empty() %}
+    <div id="empty-state-container" class="empty-state">
+        <p>Nenhum item encontrado.</p>
+    </div>
+{% else %}
+    {% for item in items %}
+        {% include "item_card.html" %}
+    {% endfor %}
+{% endif %}
