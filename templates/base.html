@@ -3,24 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Rustavoid — TESTE DE CORES{% endblock %}</title>
-    
-    <!-- CSS e Fontes -->
-    <link rel="stylesheet" href="/static/styles.css?v=6">
-    
-    <!-- HTMX para interatividade assíncrona instantânea -->
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVntoL15YYTLmyje0656JD1Ed24FLGYJiUnnCwJLyGEcCdIIyGp5gJ" crossorigin="anonymous"></script>
+    <title>{% block title %}Rustavoid{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css?v=1">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Rustavoid 🚫</h1>
-            <p>Seu escudo pessoal contra experiências ruins. Cadastre marcas, produtos e serviços que não gostou para nunca mais repetir o erro.</p>
-        </header>
+    <header class="topbar">
+        <div class="container">
+            <h1>Rustavoid</h1>
+            <p>Registre compras e serviços ruins para evitar repetir erro.</p>
+        </div>
+    </header>
 
-        <main>
+    <main class="container">
             {% block content %}{% endblock %}
-        </main>
-    </div>
+    </main>
 </body>
 </html>

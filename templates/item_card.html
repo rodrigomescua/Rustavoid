@@ -1,13 +1,12 @@
-<div class="avoid-card htmx-added" 
+<article class="avoid-card htmx-added"
      style="--badge-color: var(--severity-{{ item.severity }}); --accent-color: hsl(var(--severity-{{ item.severity }}));">
-    
-    <div class="avoid-header">
-        <div class="avoid-title-group">
-            <span class="avoid-category">{{ item.category }}</span>
+
+    <header class="avoid-header">
+        <div>
+            <div class="avoid-category">{{ item.category }}</div>
             <h3>{{ item.title }}</h3>
         </div>
-        
-        <span class="severity-badge">
+        <span class="severity-badge" aria-label="Gravidade">
             {% if item.severity == "low" %}
                 Baixa
             {% else if item.severity == "medium" %}
@@ -16,41 +15,43 @@
                 Alta
             {% endif %}
         </span>
-    </div>
-    
+    </header>
+
     <div class="avoid-body">
-        <p>{{ item.reason }}</p>
-        
+        {% if let Some(reason) = item.reason %}
+            {% if !reason.is_empty() %}
+                <p>{{ reason }}</p>
+            {% else %}
+                <p>Sem motivo informado.</p>
+            {% endif %}
+        {% else %}
+            <p>Sem motivo informado.</p>
+        {% endif %}
         {% if let Some(alt) = item.alternative %}
             {% if !alt.is_empty() %}
                 <div class="avoid-alternative">
-                    <strong>Alternativa Recomendada:</strong> {{ alt }}
+                    <strong>Alternativa:</strong> {{ alt }}
                 </div>
             {% endif %}
         {% endif %}
     </div>
-    
-    <div class="avoid-footer">
+
+    <footer class="avoid-footer">
         <span class="avoid-date">
             {% if let Some(date) = item.created_at %}
-                Cadastrado em: {{ date }}
+                {{ date }}
             {% else %}
                 Recente
             {% endif %}
         </span>
-        
-        <!-- Exclusão instantânea e animada via HTMX -->
-        <button class="btn-delete" 
+
+        <button class="btn-delete"
                 hx-delete="/items/{{ item.id }}"
+                hx-confirm="Tem certeza que deseja excluir este item?"
                 hx-target="closest .avoid-card"
                 hx-swap="outerHTML swap:350ms"
                 title="Excluir item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
+            Excluir
         </button>
-    </div>
-</div>
+    </footer>
+</article>
